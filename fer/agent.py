@@ -12,4 +12,4 @@ def pSuccess(Q, reward, gamma):
 
 
 #Aca tienes que reemplazar la llamada por los Q-values obtenidos, el reward total que se obtiene al terminar la tarea de forma exitosa y tu discount factor.
-print(pSuccess(0.6, 1, 0.9))
+#print(pSuccess(0.6, 1, 0.9))

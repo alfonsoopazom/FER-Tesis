@@ -1,17 +1,9 @@
-import agente.policy as politica
-import numpy as npm
-from agente.policy import policyPrint, plus
 
-
-def printNumpy():
-    a = npm.arange(15).reshape(3, 5)
-    print(a.shape)
+import fer.agent as agente
 
 def main():
-    politica.policyPrint()
-    policyPrint()
-    plus(1,2)
-    printNumpy()
+    a = agente.pSuccess(0.6, 1, 0.9)
+    print(a)
 
 if __name__ == '__main__':
     main()
