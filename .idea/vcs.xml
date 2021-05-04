@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/A-Guide-to-DeepMinds-StarCraft-AI-Environment" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FERL" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/pysc2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/python-sc2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/s2client-proto" vcs="Git" />
+  </component>
+</project>
