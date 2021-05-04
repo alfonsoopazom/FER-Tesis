@@ -134,3 +134,4 @@ pyenv.cfg/
 .vscode
 
 pysc2/.gitignore
+.ideas
