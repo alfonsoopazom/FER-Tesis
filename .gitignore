@@ -132,6 +132,3 @@ pyenv.cfg/
 
 #Visual Studio Code
 .vscode
-
-pysc2/.gitignore
-.ideas
