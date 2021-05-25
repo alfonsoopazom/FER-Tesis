@@ -132,11 +132,9 @@ pyenv.cfg/
 
 #Visual Studio Code
 .vscode
-
-#Eviroment of game
-ChefsHatGYM
-examples/E_1_P_['RANDOM_Random1', 'RANDOM_Random2', 'RANDOM_Random3', 'RANDOM_Random4']_GT_MATCHES_SC10_2021-05-24_08:31:09.853786
-
 .idea
 
-
+#Enviroment of game
+ChefsHatGYM
+ChefsHatGYM/.idea
+examples
