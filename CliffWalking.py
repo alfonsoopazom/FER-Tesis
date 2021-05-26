@@ -86,7 +86,6 @@ class AgenteQlearning:
         # explotacion
         else:  # mejor valor Q
             return np.argmax(self.Q[estado[0], estado[1], :])
-
     # end seleccionarAccion
 
     # td control

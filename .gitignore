@@ -132,9 +132,9 @@ pyenv.cfg/
 
 #Visual Studio Code
 .vscode
+
 .idea
 
 #Enviroment of game
-ChefsHatGYM
-ChefsHatGYM/.idea
+ChefsHatGYMj
 examples
