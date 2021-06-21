@@ -1,4 +1,4 @@
-class RewardPerformanceScore():
+class RewardPerformanceScore:
 
     rewardName = "PerformanceScore"
 

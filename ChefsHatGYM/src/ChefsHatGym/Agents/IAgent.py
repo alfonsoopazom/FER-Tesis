@@ -6,7 +6,7 @@ import signal
 from contextlib import contextmanager
 
 
-class IAgent():
+class IAgent:
     """This is the Agent class interface. Every new Agent must inherit from this class and implement the methods below.
         """
 
@@ -132,7 +132,7 @@ class IAgent():
 
 
     @contextmanager
-    def timeout(self,time):
+    def timeout(self, time):
         """This method can be called to make any action of the agent timed out. It adds a timeout for the action function
 
                 :param time: time in seconds

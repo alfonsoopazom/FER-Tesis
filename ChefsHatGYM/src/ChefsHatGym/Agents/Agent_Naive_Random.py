@@ -39,4 +39,3 @@ class AgentNaive_Random(IAgent.IAgent):
         matchFinished = info["thisPlayerFinished"]
 
         return self.reward.getReward(thisPlayer, matchFinished)
-
