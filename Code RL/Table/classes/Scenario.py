@@ -22,42 +22,35 @@ class Scenario(object):
         
         self.actions = 8
         self.states = 46
-    #end of __init__ method
- 
+
     def getNumberOfStates(self):
         return self.states
-    #end of getOfStates method
 
     def getNumberOfActions(self):
         return self.actions
-    #end of getOfStates method
 
     def getTransition(self, state, action):
         state = state+1
         action = action+1
-        stateNormalized =  2*(state-1)/45.0 - 1;
-        actionNormalized =  2*(action-1)/7.0 - 1;
+        stateNormalized =  2*(state-1)/45.0 - 1
+        actionNormalized =  2*(action-1)/7.0 - 1
         inputData = np.matrix([[stateNormalized], [actionNormalized]])
-        hiddenValues1 = np.tanh(self.iw * inputData + self.b1);
-        hiddenValues2 = np.tanh(self.lw1 * hiddenValues1 + self.b2);
-        outputData = self.lw2 * hiddenValues2 + self.b3;
+        hiddenValues1 = np.tanh(self.iw * inputData + self.b1)
+        hiddenValues2 = np.tanh(self.lw1 * hiddenValues1 + self.b2)
+        outputData = self.lw2 * hiddenValues2 + self.b3
         outputDesnormalized = int(round((outputData + 1)*23 - 1))
         return outputDesnormalized
-    #end of getTransition method
 
     def resetScenario(self):
         self.actualState = 0
-    #end of resetScenario method
 
     def getState(self):
         return self.actualState
-    #end of getState method
-    
+
     def executeAction(self, action):
         state = self.getState()
         self.actualState = self.getTransition(state, action)
-    #end of executeAction method
-    
+
     def getReward(self):
         if self.actualState == -1:
             return -1
@@ -65,6 +58,3 @@ class Scenario(object):
             return 1
         else:
             return -0.01
-
-    
-#end of class Scenario

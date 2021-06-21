@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 # Creacion de CliffWalking
-class CliffWalking():
+class CliffWalking:
     def __init__(self, ancho, alto):
         self.ancho = ancho
         self.alto = alto
@@ -18,7 +17,6 @@ class CliffWalking():
         # zonas
         self.startPos = [0, 3]
         self.goalPos = [11, 3]
-
     # end __init__
 
     def reset(self):
@@ -65,7 +63,6 @@ class CliffWalking():
         return self.agentPos, reward
     # end actuar
 
-
 class AgenteQlearning:
     def __init__(self, entorno, alpha=0.5, epsilon=0.5, gamma=0.3):
         self.entorno = entorno
@@ -84,9 +81,8 @@ class AgenteQlearning:
         if np.random.rand() <= self.epsilon:  # aleatorio
             return np.random.randint(self.nAcciones)
         # explotacion
-        else:  # mejor valor Q
+        else:
             return np.argmax(self.Q[estado[0], estado[1], :])
-
     # end seleccionarAccion
 
     # td control
@@ -96,11 +92,12 @@ class AgenteQlearning:
         self.Q[estado[0], estado[1], accion] += self.alpha * td_error
 
     def entrenar(self, episodios):
+
         recompensas = []
 
         for e in range(episodios):
-            estado = self.entorno.reset()
 
+            estado = self.entorno.reset()
             recompensa = 0
             fin = False
 
@@ -124,8 +121,7 @@ class AgenteQlearning:
         return recompensas
     # end entrenar
 
-
-class AgenteSarsa():
+class AgenteSarsa:
     def __init__(self, entorno, alpha=0.5, epsilon=0.5, gamma=0.3):  # 0.99):
         self.entorno = entorno
         self.nEstados = [entorno.ancho, entorno.alto]

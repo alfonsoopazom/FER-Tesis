@@ -77,7 +77,7 @@ def trainAgent(tries, episodes, scenario, teacherAgent=None, feedback=0):
 #end trainAgent method
 
 if __name__ == "__main__":
-    print "Interactive RL for cleaning a table is running ... "
+    print("Interactive RL for cleaning a table is running ... ")
     tries = 30
     episodes = 1000 
     feedbackProbability = 0.3
@@ -94,6 +94,6 @@ if __name__ == "__main__":
 
     plotRewards()
     
-    print "The end"
+    print("The end")
 
 # end of main method
