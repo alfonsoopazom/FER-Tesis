@@ -1,6 +1,8 @@
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
 from ChefsHatGym.Agents import Agent_Introspection
 from ChefsHatGym.Agents import Agent_Naive_Random
 from ChefsHatGym.Agents import PPO
@@ -14,8 +16,7 @@ rew = []
 epsilon = []
 qvaluesAux = []
 gamma = 0.9
-
-q_values_file = open("qValues.txt", "w")
+height = 200
 
 """Game parameters"""
 gameType = ChefsHatEnv.GAMETYPE["MATCHES"]
@@ -41,7 +42,7 @@ saveDirectory = "examples/"
 verbose = False
 saveLog = False
 saveDataset = False
-episodes = 50
+episodes = 1
 
 """Setup environment"""
 env = gym.make('chefshat-v0')  # starting the game Environment
@@ -57,9 +58,10 @@ for a in range(episodes):
 
         currentPlayer = playersAgents[env.currentPlayer]
         observations = env.getObservation()
-        action = currentPlayer.getAction(observations)
+        action = currentPlayer.getAction(observations) # Esta funcion retornaria los valores Q
 
         info = {"validAction": False}
+
 
         while not info["validAction"]:
 
@@ -67,6 +69,10 @@ for a in range(episodes):
 
         agent1.actionUpdate(observations, nextobs, action, reward, info)
         rew.append(reward)
+        Qvalues[0,(np.argmax(action))] = np.max(action)
+
+        with open("qValues.txt", 'a') as val_file:
+            val_file.write(','.join(map(str, action)) + "\n")
 
         if isMatchOver:
 
@@ -76,7 +82,6 @@ for a in range(episodes):
                 qvaluesAux.append(b)
                 epsilon.append(agent1.epsilon)
 
-
             print("-------------")
             print("Match:" + str(info["matches"]))
             print("Score:" + str(info["score"]))
@@ -85,11 +90,15 @@ for a in range(episodes):
 
 #agent1.pSuccess(Qvalues, rew)
 
-for row in qvaluesAux:
-    np.savetxt(q_values_file, row)
-q_values_file.close()
+df = pd.read_csv('qValues.txt', header=None)
 
-plt.plot(qvaluesAux, Label='Q-values')
+print(df)
+print(df.loc[[0]])
+print(df.shape[0])
+print(df.shape[1])
+
+
+plt.bar(list(range(height)), Qvalues[0], Label='Q-values')
 plt.title("Q-Values Introspection entrenamiento")
 plt.xlabel('Steps')
 plt.ylabel('Q-Values')
