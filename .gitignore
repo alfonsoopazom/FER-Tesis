@@ -140,3 +140,8 @@ pyenv.cfg/
 ChefsHatGYM
 examples
 
+#imagenes
+valores_epsilon.png
+valores_recompensas.png
+q_values.png
+qValues.txt
