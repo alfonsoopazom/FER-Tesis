@@ -139,9 +139,9 @@ pyenv.cfg/
 #Enviroment of game
 ChefsHatGYM
 examples
-
-#imagenes
-valores_epsilon.png
-valores_recompensas.png
-q_values.png
-qValues.txt
+dataIntrospection
+dataPPO
+dataRandom
+imagesIntrospection
+imagesPPO
+imagesRandom

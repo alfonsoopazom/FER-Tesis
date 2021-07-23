@@ -12,7 +12,7 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-# Package meta-data.
+# Package meta-dataIntrospection.
 NAME = "ChefsHatGym"
 DESCRIPTION = """A python interface for training Reinforcement Learning agents to play the Chef's Hat Card Game."""
 URL = "https://github.com/pablovin/ChefsHatGYM"

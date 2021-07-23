@@ -18,7 +18,7 @@ class Tournament():
     def __init__(self, savingDirectory, verbose=True, opponentsComp=[], opponentsCoop=[], oponentsCompCoop=[],threadTimeOut=5, actionTimeOut=5,  gameType=["POINTS"], gameStopCriteria=15):
 
         """Constructor of the tournament.
-                :param savingDirectory: directory where the tournament logs and data will be saved.
+                :param savingDirectory: directory where the tournament logs and dataIntrospection will be saved.
                 :type savingDirectory: str
 
                 :param verbose: if the tournament will be written on the console
