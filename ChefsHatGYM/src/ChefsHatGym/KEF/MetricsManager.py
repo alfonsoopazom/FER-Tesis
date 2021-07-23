@@ -7,7 +7,7 @@ import csv
 class MetricsManager:
     """DataSet Manager Class
 
-    This class manages the function of the framework to create a metrics summary. Here each metric data point is created, and written if necessary.
+    This class manages the function of the framework to create a metrics summary. Here each metric dataIntrospection point is created, and written if necessary.
 
 
     Attributes:

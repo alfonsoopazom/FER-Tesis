@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-
 from ChefsHatGym.Agents import Agent_Introspection
 from ChefsHatGym.Agents import Agent_Naive_Random
 from ChefsHatGym.Agents import PPO
@@ -13,21 +12,10 @@ from ChefsHatGym.env import ChefsHatEnv
 
 np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
-def pSuccess(Q, reward, gamma):
-    n = np.log(Q / reward) / np.log(gamma)
-    log10baseGamma = np.log(10) / np.log(gamma)
-    probOfSuccess = (n / (2 * log10baseGamma)) + 1
-    probOfSuccessLimit = np.minimum(1, np.maximum(0, probOfSuccess))
-    # probOfSuccessLimit = probOfSuccessLimit * (1 - stochasticity) #Usar solo si usamos transiciones estocasticas o el parametro sigma
-    return probOfSuccessLimit
-
-
 """General parameters"""
-Qvalues = np.zeros([1, 200])
+
 rew = []
-epsilon = []
 qvaluesAux = []
-gamma = 0.9
 height = 200
 promQ = np.zeros([1, 200])
 index = 0
@@ -35,7 +23,8 @@ index = 0
 """Game parameters"""
 gameType = ChefsHatEnv.GAMETYPE["MATCHES"]
 
-gameStopCriteria = 5
+gameStopCriteria = 300
+
 rewardFunction = RewardOnlyWinning.RewardOnlyWinning()
 
 """Player Parameters"""
@@ -56,7 +45,7 @@ saveDirectory = "examples/"
 verbose = False
 saveLog = False
 saveDataset = False
-episodes = 2
+episodes = 1
 
 """Setup environment"""
 env = gym.make('chefshat-v0')  # starting the game Environment
@@ -72,32 +61,20 @@ for a in range(episodes):
 
         currentPlayer = playersAgents[env.currentPlayer]
         observations = env.getObservation()
-        action = agent1.getAction(observations)
+        action = currentPlayer.getAction(observations)
 
         info = {"validAction": False}
 
-        while not info["validAction"]:
+        while not info["validAction"]:  # aca estan los steps del juego (descartar cartas o pasar)
 
             nextobs, reward, isMatchOver, info = env.step(action)
-            #index += 1
-            #print(index, reward)
 
-        agent1.actionUpdate(observations, nextobs, action, reward, info)
-        rew.append(reward)
-        Qvalues[0,(np.argmax(action))] = np.max(action)
-        #print(Qvalues[0])
+        currentPlayer.actionUpdate(observations, nextobs, action, reward, info)
 
-        with open("qValues.txt", 'a+') as val_file:
-            val_file.write(','.join(map(str, action)) + "\n")
+        if isMatchOver:  # aca es cuando un jugador se descarta la mano
 
-        if isMatchOver: # aca es cuando un jugador se descarta la mano
-
-            q = agent1.matchUpdate(info)
-            epsilon.append(agent1.epsilon)
-
-            '''for p in playersAgents:
-                q = agent1.matchUpdate(info)
-                epsilon.append(agent1.epsilon)'''
+            for p in playersAgents:
+                p.matchUpdate(info)
 
             print("-------------")
             print("Match:" + str(info["matches"]))
@@ -106,69 +83,105 @@ for a in range(episodes):
             print("-------------")
 
 
-df = pd.read_csv('qValues.txt', header=None)
+df = pd.read_csv('dataIntrospection/probabilityForGame.txt', header=None, delimiter="\t")
 df['sum'] = df.sum(axis=1)
-prom = df['sum'] / 200
 
-sumRew = sum(rew)
-print(Qvalues)
+# print(df.loc[[626]])
+# print(df['sum'])
+# print(df.shape[0]) # imprime el numero de filas
+# print(df.shape[1]) # imprime el numero de columnas
 
-prob = pSuccess(Qvalues, sumRew, gamma)
-np.sort(prob)
-print("probabilidad", prob)
+# Plotlty Express
+# fig = px.line(Qvalues[0], title='Maximos Q-Values')
+# fig.show()
 
-#promQ = prom
-#print(Qvalues[0])
+# fig2 = px.line(prom, title='Promedios Q-values')
+# fig2.show()
 
-#print(df.loc[[626]])
-#print(df['sum'])
-#print(df.shape[0]) # imprime el numero de filas
-#print(df.shape[1]) # imprime el numero de columnas
+'''Ploteo del agente introspection'''
+plt.plot(agent1.promProb, Label='Probabilidades de exito')
+plt.title("Promedios probabilidades de exito")
+plt.xlabel('games')
+plt.ylabel('probabilidades')
+plt.legend()
+plt.savefig("imagesIntrospection/prom_probabilidades.png")
+plt.close()
 
-#Plotlty Express
-#fig = px.line(Qvalues[0], title='Maximos Q-Values')
-#fig.show()
+plt.plot(list(range(height)), agent1.Qvalues[0], Label='Q-values final State')
+plt.title("Q-Values Introspection entrenamiento")
+plt.ylabel('Q-Values')
+plt.legend()
+plt.savefig("imagesIntrospection/valores_q.png")
+plt.close()
 
-#fig2 = px.line(prom, title='Promedios Q-values')
-#fig2.show()
+plt.plot(agent1.epsilonArr, label="Valores de Epsilon")
+plt.title("Epsilon de Introspection entrenamiento")
+plt.xlabel('Rondas')
+plt.ylabel('Epsilon')
+plt.legend()
+plt.savefig("imagesIntrospection/valores_epsilon.png")
+plt.close()
 
+plt.plot(agent1.rewardAcc, label="Rewards")
+plt.title("Recompensas del Introspection")
+plt.xlabel('steps')
+plt.ylabel('rewards')
+plt.legend()
+plt.savefig("imagesIntrospection/valores_recompensas.png")
+plt.close()
 
-plt.plot(prom, Label='Promedios Q-values')
+plt.plot(agent1.mse, label="Error cuadratico medio")
+plt.title("Error cuadratico medio Introspection")
+plt.xlabel('Games')
+plt.ylabel('ECM')
+plt.legend()
+plt.savefig("imagesIntrospection/valores_ECM.png")
+plt.close()
+
+'''Ploteo del agente PPO'''
+'''plt.plot(prom, Label='Promedios Q-values')
 plt.title("Q-Values Introspection entrenamiento")
 plt.xlabel('Steps')
 plt.ylabel('Q-Values')
 plt.legend()
 plt.savefig("prom_q_values.png")
-plt.close()
+plt.close()'''
 
-plt.plot(list(range(height)), prob[0], '-', Label='Q-values')
+plt.plot(list(range(height)), agent2.Qvalues[0], Label='Q-values final State')
 plt.title("Q-Values Introspection entrenamiento")
-plt.xlabel('Steps')
 plt.ylabel('Q-Values')
 plt.legend()
-plt.savefig("q_values.png")
+plt.savefig("imagesPPO/valores_q.png")
 plt.close()
 
-plt.plot(epsilon, label="Valores de Epsilon")
+plt.plot(agent2.epsilonArr, label="Valores de Epsilon")
 plt.title("Epsilon de Introspection entrenamiento")
-plt.xlabel('Steps')
+plt.xlabel('Rondas')
 plt.ylabel('Epsilon')
 plt.legend()
-plt.savefig("valores_epsilon.png")
+plt.savefig("imagesPPO/valores_epsilon.png")
 plt.close()
 
-plt.plot(rew, label="Recompensas")
-plt.title("Recompensas de Introspection entrenamiento")
-plt.xlabel('Steps')
-plt.ylabel('Rewards')
+plt.plot(agent2.rewardAcc, label="Rewards")
+plt.title("Recompensas del Introspection")
+plt.xlabel('steps')
+plt.ylabel('rewards')
 plt.legend()
-plt.ylim([-0.5, 1.5])
-plt.savefig("valores_recompensas.png")
+plt.savefig("imagesPPO/valores_recompensas.png")
 plt.close()
+
+plt.plot(agent2.lossNetwork, label="Error cuadratico medio")
+plt.title("Error cuadratico medio Introspection")
+plt.xlabel('Games')
+plt.ylabel('ECM')
+plt.legend()
+plt.savefig("imagesPPO/valores_ECM.png")
+plt.close()
+
 
 """Evaluate Agent"""
-#env.startExperiment(rewardFunctions=rewards, gameType=gameType, stopCriteria=gameStopCriteria, playerNames=agentNames,
- #                   logDirectory=saveDirectory, verbose=verbose, saveDataset=True, saveLog=True)
+# env.startExperiment(rewardFunctions=rewards, gameType=gameType, stopCriteria=gameStopCriteria, playerNames=agentNames,
+#                   logDirectory=saveDirectory, verbose=verbose, saveDataset=True, saveLog=True)
 
 """Start Environment"""
 '''for a in range(episodes):

@@ -194,7 +194,7 @@ def plotFinishPositions(names, scoresAll, winners, iteraction, plotDirectory):
             if result == 1:
                 totalWins = totalWins+1
 
-        # print("Player: " + str(i) + " - data:" + str(currentPLayerData))
+        # print("Player: " + str(i) + " - dataIntrospection:" + str(currentPLayerData))
         dataY = range(len(winners))
         # print("Player: " + str(i) + " - dataY:" + str(dataY))
 
@@ -352,11 +352,11 @@ def plotTimeLineMood(names, moodNeurons, moodReading, iteraction, playersAction,
     # for indexPlayer, player in enumerate(names):
     #     player1Actions = totalActions[indexPlayer]
     #     player1Colors = totalColors[indexPlayer]
-    #     data = numpy.array(player1Actions)
-    #     data_cum = data.cumsum(axis=0)
+    #     dataIntrospection = numpy.array(player1Actions)
+    #     data_cum = dataIntrospection.cumsum(axis=0)
     #
     #     for i, (colname, color) in enumerate(zip(player1Actions, player1Colors)):
-    #         widths = data[i]
+    #         widths = dataIntrospection[i]
     #         starts = data_cum[i] - widths
     #
     #         ax[0].barh(list([player]), widths, left=starts, height=1,
@@ -1212,7 +1212,7 @@ def plotDiscardBehavior( names, actions, gameNumber, plotsDirectory):
             ax.legend()
 
 
-            # print("Player: " + str(i) + " - data:" + str(currentPLayerData))
+            # print("Player: " + str(i) + " - dataIntrospection:" + str(currentPLayerData))
             dataY = range(len(currentPlayerActions))
             # print("Player: " + str(i) + " - dataY:" + str(dataY))
 

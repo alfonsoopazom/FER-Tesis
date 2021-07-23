@@ -35,7 +35,7 @@ class IAgent:
     def getAction(self, observations):
         """This method returns one action given the observation parameter.
 
-                :param observations: The observation is an int data-type ndarray.
+                :param observations: The observation is an int dataIntrospection-type ndarray.
                                     The observation array has information about the board game, the player's hand, and possible actions.
                                     This array must have the shape of (228, ) as follows:
                                     The first 11 elements represent the board game card placeholder (the pizza area).
@@ -57,7 +57,7 @@ class IAgent:
                 :param info: [description]
                 :type info: dict
 
-                :param stateBefore: The observation before the action happened is an int data-type ndarray.
+                :param stateBefore: The observation before the action happened is an int dataIntrospection-type ndarray.
                                     The observationBefore array has information (before the player's action) about the board game, the player's hand, and possible actions.
                                     This array must have the shape of (228, ) as follows:
                                     The first 11 elements represent the board game card placeholder (the pizza area).
@@ -67,7 +67,7 @@ class IAgent:
                                     The allowed actions are filled with one, while invalid actions are filled with 0.
                 :type stateBefore: ndarray
 
-                :param stateAfter: The observation after the action happened is an int data-type ndarray.
+                :param stateAfter: The observation after the action happened is an int dataIntrospection-type ndarray.
                                     The observationBefore array has information (after the player's action) about the board game, the player's hand, and possible actions.
                                     This array must have the shape of (228, ) as follows:
                                     The first 11 elements represent the board game card placeholder (the pizza area).
@@ -95,7 +95,7 @@ class IAgent:
     def actionUpdate(self,  observation, nextObservation, action, envInfo):
         """This method that is called after the Agent's action.
 
-                :param observation: The observation is an int data-type ndarray.
+                :param observation: The observation is an int dataIntrospection-type ndarray.
                                     The observation array has information about the board game, the player's hand, and possible actions.
                                     This array must have the shape of (228, ) as follows:
                                     The first 11 elements represent the board game card placeholder (the pizza area).
@@ -104,7 +104,7 @@ class IAgent:
                                     By the end, the last 200 elements (from index 28 to 227) represent all possible actions in the game.
                                     The allowed actions are filled with one, while invalid actions are filled with 0.
                 :type observation: ndarray
-                :param nextObservation: The nextObservation is an int data-type ndarray.
+                :param nextObservation: The nextObservation is an int dataIntrospection-type ndarray.
                                     The nextObservation array has information about the board game, the player's hand, and possible actions.
                                     This array must have the shape of (228, ) as follows:
                                     The first 11 elements represent the board game card placeholder (the pizza area).
