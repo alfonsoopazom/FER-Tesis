@@ -142,6 +142,6 @@ examples
 dataIntrospection
 dataPPO
 dataRandom
-imagesIntrospection
+imagesTraining
 imagesPPO
-imagesRandom
+imagesValidation
