@@ -21,7 +21,7 @@ index = 0
 """Game parameters"""
 gameType = ChefsHatEnv.GAMETYPE["MATCHES"]
 
-gameStopCriteria = 30
+gameStopCriteria = 40
 
 rewardFunction = RewardOnlyWinning.RewardOnlyWinning()
 
