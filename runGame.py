@@ -4,6 +4,7 @@ import numpy as np
 
 from ChefsHatGym.Agents import Agent_Introspection
 from ChefsHatGym.Agents import Agent_Naive_Random
+from ChefsHatGym.Agents import Agent_Naive_Random1
 from ChefsHatGym.Agents import PPO
 from ChefsHatGym.Rewards import RewardOnlyWinning
 from ChefsHatGym.env import ChefsHatEnv
@@ -20,15 +21,15 @@ index = 0
 """Game parameters"""
 gameType = ChefsHatEnv.GAMETYPE["MATCHES"]
 
-gameStopCriteria = 15
+gameStopCriteria = 30
 
 rewardFunction = RewardOnlyWinning.RewardOnlyWinning()
 
 """Player Parameters"""
 agent1 = Agent_Introspection.DQL(name="Introspection")
 agent2 = PPO.PPO(name="PPO")
-agent3 = Agent_Naive_Random.AgentNaive_Random("Random3")
-agent4 = Agent_Naive_Random.AgentNaive_Random("Random4")
+agent3 = Agent_Naive_Random.AgentNaive_Random(name="Random3")
+agent4 = Agent_Naive_Random1.AgentNaive_Random(name="Random4")
 agentNames = [agent1.name, agent2.name, agent3.name, agent4.name]
 playersAgents = [agent1, agent2, agent3, agent4]
 
@@ -90,8 +91,8 @@ for a in range(episodes):
 '''Ploteo del agente introspection'''
 plt.plot(agent1.promProb, 'r', Label='Probabilidades de exito DQN')
 plt.plot(agent2.promProb, 'g', Label='Probabilidades de exito PPO')
-plt.title("Promedios probabilidades de exito de entrenamiento")
-plt.xlabel('games')
+plt.title("Promedios probabilidades de éxito - entrenamiento")
+plt.xlabel('juegos')
 plt.ylabel('probabilidades')
 plt.legend()
 plt.savefig("imagesTraining/prom_probabilidades.png")
@@ -99,16 +100,16 @@ plt.close()
 
 plt.plot(list(range(height)), agent1.Qvalues[0], 'r', Label='Q-values DQN')
 plt.plot(list(range(height)), agent2.Qvalues[0], 'g', Label='Q-values PPO')
-plt.title("Q-Values finales de entrenamiento")
+plt.title("Q-Values finales - entrenamiento")
 plt.ylabel('Q-Values')
 plt.legend()
 plt.savefig("imagesTraining/valores_q.png")
 plt.close()
 
 plt.plot(agent1.epsilonArr, label="Valores de Epsilon")
-plt.title("Epsilon de DQN entrenamiento")
-plt.xlabel('games')
-plt.ylabel('Epsilon')
+plt.title("Epsilon de DQN - entrenamiento")
+plt.xlabel('juegos')
+plt.ylabel('valores epsilon')
 plt.legend()
 plt.savefig("imagesTraining/valores_epsilon.png")
 plt.close()
@@ -117,25 +118,28 @@ plt.plot(agent1.rewardAcc, 'r-', label="Rewards DQN")
 plt.plot(agent2.rewardAcc, 'g', label="Rewards PPO")
 plt.plot(agent3.rewardAcc, 'b', label="Rewards Random 1")
 plt.plot(agent4.rewardAcc, 'k', label="Rewards Random 2")
-plt.title("Recompensas por steps")
+plt.title("Recompensas por steps - entrenamiento")
 plt.xlabel('steps')
 plt.ylabel('rewards')
 plt.legend()
 plt.savefig("imagesTraining/valores_recompensas.png")
 plt.close()
 
-'''plt.plot(sum(agent1.rewardAcc), label="Error cuadratico medio")
-plt.title("Error cuadratico medio Introspection")
-plt.xlabel('Games')
-plt.ylabel('ECM')
+plt.plot(agent1.sumRewardAcc, 'r-', label="Rewards DQN")
+plt.plot(agent2.sumRewardAcc, 'g-', label="Rewards PPO")
+plt.title("Recompensas acumuladas por steps - entrenamiento")
+plt.xlabel('steps')
+plt.ylabel('rewards')
 plt.legend()
-plt.savefig("imagesTraining/valores_ECM.png")
+plt.savefig("imagesTraining/valores_recompensas_acumuladas.png")
 plt.close()
-'''
 
+"""Reseteo de los valores"""
+for p in playersAgents:
+    p.restarValues()
 
 """Evaluate Agent"""
-'''env.startExperiment(rewardFunctions=rewards, gameType=gameType, stopCriteria=gameStopCriteria, playerNames=agentNames,
+env.startExperiment(rewardFunctions=rewards, gameType=gameType, stopCriteria=gameStopCriteria, playerNames=agentNames,
                    logDirectory=saveDirectory, verbose=verbose, saveDataset=True, saveLog=True)
 
 """Start Environment"""
@@ -155,53 +159,33 @@ for a in range(episodes):
             nextobs, reward, isMatchOver, info = env.step(action)
 
         if isMatchOver:
+
+            agent1.probability()
+            agent2.probability()
+
             print("-------------")
             print("Match:" + str(info["matches"]))
             print("Score:" + str(info["score"]))
             print("Performance:" + str(info["performanceScore"]))
             print("-------------")
 
-
-plt.plot(agent1.promProb,'r', Label='Probabilidades de exito Introspection')
-plt.plot(agent2.promProb,'g', Label='Probabilidades de exito PPO')
-plt.title("Promedios probabilidades de exito de entrenamiento")
-plt.xlabel('games')
-plt.ylabel('probabilidades')
-plt.legend()
-plt.savefig("imagesValidation/prom_probabilidades.png")
-plt.close()
-
-plt.plot(list(range(height)), agent1.Qvalues[0],'r', Label='Q-values Introspection')
-plt.plot(list(range(height)), agent2.Qvalues[0],'g', Label='Q-values PPO')
-plt.title("Q-Values finales de entrenamiento")
-plt.ylabel('Q-Values')
-plt.legend()
-plt.savefig("imagesValidation/valores_q_finales.png")
-plt.close()
-
-plt.plot(agent1.epsilonArr, label="Valores de Epsilon")
-plt.title("Epsilon de Introspection validacion")
-plt.xlabel('Rondas')
-plt.ylabel('Epsilon')
-plt.legend()
-plt.savefig("imagesValidation/valores_epsilon.png")
-plt.close()
-
-plt.plot(agent1.rewardAcc,'r', label="Rewards Introspection")
-plt.plot(agent2.rewardAcc,'g',label="Rewards PPO")
-plt.plot(agent3.rewardAcc,'b',label="Rewards Random 1")
-plt.plot(agent4.rewardAcc,'y',label="Rewards Random 2")
-plt.title("Recompensas")
+plt.plot(agent1.rewardAcc, 'r-', label="Rewards DQN")
+plt.plot(agent2.rewardAcc, 'g', label="Rewards PPO")
+plt.plot(agent3.rewardAcc, 'b', label="Rewards Random 1")
+plt.plot(agent4.rewardAcc, 'k', label="Rewards Random 2")
+plt.title("Recompensas por steps - validación")
 plt.xlabel('steps')
 plt.ylabel('rewards')
 plt.legend()
 plt.savefig("imagesValidation/valores_recompensas.png")
 plt.close()
 
-plt.plot(agent1.mse, label="MSE validacion")
-plt.title("Error cuadratico medio")
-plt.xlabel('Games')
-plt.ylabel('ECM')
+'''Ploteo del agente introspection'''
+plt.plot(agent1.promProb, 'r', Label='Probabilidades de exito DQN')
+plt.plot(agent2.promProb, 'g', Label='Probabilidades de exito PPO')
+plt.title("Promedios probabilidades de éxito - validacion")
+plt.xlabel('juegos')
+plt.ylabel('probabilidades')
 plt.legend()
-plt.savefig("imagesValidation/valores_ECM.png")
-plt.close()'''
+plt.savefig("imagesValidation/prom_probabilidades_validacion.png")
+plt.close()
