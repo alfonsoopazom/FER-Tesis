@@ -11,18 +11,10 @@ from ChefsHatGym.env import ChefsHatEnv
 
 np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
-"""General parameters"""
-rew = []
-qvaluesAux = []
-height = 200
-promQ = np.zeros([1, 200])
-index = 0
-
 """Game parameters"""
 gameType = ChefsHatEnv.GAMETYPE["MATCHES"]
-
-gameStopCriteria = 40
-
+gameStopCriteria = 100
+height = 200
 rewardFunction = RewardOnlyWinning.RewardOnlyWinning()
 
 """Player Parameters"""
@@ -91,7 +83,7 @@ for a in range(episodes):
 '''Ploteo del agente introspection'''
 plt.plot(agent1.promProb, 'r', Label='Probabilidades de exito DQN')
 plt.plot(agent2.promProb, 'g', Label='Probabilidades de exito PPO')
-plt.title("Promedios probabilidades de éxito - entrenamiento")
+plt.title("Promedios probabilidades de éxito ")
 plt.xlabel('juegos')
 plt.ylabel('probabilidades')
 plt.legend()
@@ -102,12 +94,13 @@ plt.plot(list(range(height)), agent1.Qvalues[0], 'r', Label='Q-values DQN')
 plt.plot(list(range(height)), agent2.Qvalues[0], 'g', Label='Q-values PPO')
 plt.title("Q-Values finales - entrenamiento")
 plt.ylabel('Q-Values')
+plt.xlabel('Acciones')
 plt.legend()
 plt.savefig("imagesTraining/valores_q.png")
 plt.close()
 
 plt.plot(agent1.epsilonArr, label="Valores de Epsilon")
-plt.title("Epsilon de DQN - entrenamiento")
+plt.title("Epsilon de DQN")
 plt.xlabel('juegos')
 plt.ylabel('valores epsilon')
 plt.legend()
@@ -118,25 +111,36 @@ plt.plot(agent1.rewardAcc, 'r-', label="Rewards DQN")
 plt.plot(agent2.rewardAcc, 'g', label="Rewards PPO")
 plt.plot(agent3.rewardAcc, 'b', label="Rewards Random 1")
 plt.plot(agent4.rewardAcc, 'k', label="Rewards Random 2")
-plt.title("Recompensas por steps - entrenamiento")
+plt.title("Recompensas por steps")
 plt.xlabel('steps')
 plt.ylabel('rewards')
 plt.legend()
 plt.savefig("imagesTraining/valores_recompensas.png")
 plt.close()
 
-plt.plot(agent1.sumRewardAcc, 'r-', label="Rewards DQN")
+'''plt.plot(agent1.sumRewardAcc, 'r-', label="Rewards DQN")
 plt.plot(agent2.sumRewardAcc, 'g-', label="Rewards PPO")
-plt.title("Recompensas acumuladas por steps - entrenamiento")
+plt.plot(agent3.sumRewardAcc, 'b', label="Rewards Random 1")
+plt.plot(agent4.sumRewardAcc, 'k', label="Rewards Random 2")
+plt.title("Recompensas acumuladas por steps")
 plt.xlabel('steps')
 plt.ylabel('rewards')
 plt.legend()
 plt.savefig("imagesTraining/valores_recompensas_acumuladas.png")
+plt.close()'''
+
+plt.plot(agent1.avgRewards, 'r-', label="Rewards DQN")
+plt.plot(agent2.avgRewards, 'g-', label="Rewards PPO")
+plt.title("Promedio de recompesas")
+plt.xlabel('número de juegos')
+plt.ylabel('recompensa promedio')
+plt.legend()
+plt.savefig("imagesTraining/valores_avg_rewards.png")
 plt.close()
 
 """Reseteo de los valores"""
 for p in playersAgents:
-    p.restarValues()
+    p.restartRewardsValues()
 
 """Evaluate Agent"""
 env.startExperiment(rewardFunctions=rewards, gameType=gameType, stopCriteria=gameStopCriteria, playerNames=agentNames,
@@ -160,9 +164,6 @@ for a in range(episodes):
 
         if isMatchOver:
 
-            agent1.probability()
-            agent2.probability()
-
             print("-------------")
             print("Match:" + str(info["matches"]))
             print("Score:" + str(info["score"]))
@@ -173,19 +174,48 @@ plt.plot(agent1.rewardAcc, 'r-', label="Rewards DQN")
 plt.plot(agent2.rewardAcc, 'g', label="Rewards PPO")
 plt.plot(agent3.rewardAcc, 'b', label="Rewards Random 1")
 plt.plot(agent4.rewardAcc, 'k', label="Rewards Random 2")
-plt.title("Recompensas por steps - validación")
+plt.title("Recompensas por steps")
 plt.xlabel('steps')
 plt.ylabel('rewards')
 plt.legend()
 plt.savefig("imagesValidation/valores_recompensas.png")
 plt.close()
 
-'''Ploteo del agente introspection'''
+'''plt.plot(agent1.sumRewardAcc, 'r-', label="Rewards DQN")
+plt.plot(agent2.sumRewardAcc, 'g-', label="Rewards PPO")
+plt.plot(agent3.sumRewardAcc, 'b', label="Rewards Random 1")
+plt.plot(agent4.sumRewardAcc, 'k', label="Rewards Random 2")
+plt.title("Recompensas acumuladas por steps")
+plt.xlabel('steps')
+plt.ylabel('rewards')
+plt.legend()
+plt.savefig("imagesValidation/valores_recompensas_acumuladas.png")
+plt.close()'''
+
 plt.plot(agent1.promProb, 'r', Label='Probabilidades de exito DQN')
 plt.plot(agent2.promProb, 'g', Label='Probabilidades de exito PPO')
-plt.title("Promedios probabilidades de éxito - validacion")
+plt.title("Promedios probabilidades de éxito")
 plt.xlabel('juegos')
 plt.ylabel('probabilidades')
 plt.legend()
 plt.savefig("imagesValidation/prom_probabilidades_validacion.png")
 plt.close()
+
+plt.plot(list(range(height)), agent1.Qvalues[0], 'r', Label='Q-values DQN')
+plt.plot(list(range(height)), agent2.Qvalues[0], 'g', Label='Q-values PPO')
+plt.title("Q-Values finales")
+plt.ylabel('Q-Values')
+plt.xlabel('Acciones')
+plt.legend()
+plt.savefig("imagesValidation/valores_q.png")
+plt.close()
+
+plt.plot(agent1.avgRewards, 'r-', label="Rewards DQN")
+plt.plot(agent2.avgRewards, 'g-', label="Rewards PPO")
+plt.title("Promedio de recompesas")
+plt.xlabel('número de juegos')
+plt.ylabel('recompensa promedio')
+plt.legend()
+plt.savefig("imagesValidation/valores_avg_rewards.png")
+plt.close()
+
